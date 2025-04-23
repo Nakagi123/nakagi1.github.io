@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Submit to Google Sheets</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div class="form-container">
+    <h1>Contact Us</h1>
+    <form id="myForm">
+      <input type="text" name="name" placeholder="Your Name" required>
+      <input type="email" name="email" placeholder="Your Email" required>
+      <textarea name="message" placeholder="Your Message" rows="5"></textarea>
+      <button type="submit">Submit</button>
+    </form>
+    <p id="responseMsg"></p>
+  </div>
+
+  <script>
+    document.getElementById('myForm').addEventListener('submit', function(e) {
+      e.preventDefault();
+
+      const formData = {
+        name: this.name.value,
+        email: this.email.value,
+        message: this.message.value
+      };
+
+      fetch('https://script.google.com/macros/s/AKfycbwKgRJTcKMSDfD4sa_yVVUoi3rjOiJhkegt23Sx4zfggproHtrFYoGkaB7A7pZBN2kU/exec', {
+        method: 'POST',
+        body: JSON.stringify(formData),
+        headers: { "Content-Type": "application/json" }
+      })
+      .then(res => res.text())
+      .then(data => {
+        document.getElementById("responseMsg").textContent = "Submitted successfully!";
+        this.reset();
+      })
+      .catch(err => {
+        document.getElementById("responseMsg").textContent = "Submission failed. Try again.";
+        console.error("Error:", err);
+      });
+    });
+  </script>
+</body>
+</html>
